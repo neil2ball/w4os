@@ -55,7 +55,7 @@ class W4OS_Economy extends W4OS_Loader {
 			'page_title' => __( 'Economy Settings', 'w4os' ),
 			'id'         => 'w4os-economy',
 			'position'   => 25,
-			'parent'     => 'w4os_settings',
+			'parent'     => 'w4os',
 			'capability' => 'manage_options',
 			'class'      => 'w4os-settings',
 			'style'      => 'no-boxes',
