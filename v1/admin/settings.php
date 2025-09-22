@@ -51,6 +51,38 @@ function w4os_register_settings() {
 				),
 			),
 		),
+		// Add the new economy settings page
+		'w4os_economy' => array(
+			'sections' => array(
+				'default' => array(
+					'name' => __( 'MoneyServer Settings', 'w4os' ),
+					'fields' => array(
+						'w4os_use_moneyserver' => array(
+							'type'  => 'boolean',
+							'name'  => __( 'Use MoneyServer', 'w4os' ),
+							'values' => array( 'enabled' => __( 'Enable MoneyServer proxy', 'w4os' ) ),
+							'description' => __( 'Enable to forward economy calls to an external MoneyServer.', 'w4os' ),
+						),
+						'w4os_money_script_access_key' => array(
+							'type' => 'password',
+							'name' => __( 'MoneyServer Script Key', 'w4os' ),
+							'description' => __( 'The MoneyScriptAccessKey configured in MoneyServer.ini', 'w4os' ),
+						),
+						'w4os_moneyserver_url' => array(
+							'type' => 'url',
+							'name' => __( 'MoneyServer URL', 'w4os' ),
+							'placeholder' => 'https://your.moneyserver:8008/',
+						),
+						'w4os_moneyserver_cainfo' => array(
+							'type' => 'string',
+							'name' => __( 'CA Certificate Path', 'w4os' ),
+							'placeholder' => '/etc/ssl/certs/moneyserver-cert.pem',
+							'description' => __( 'Optional: path to PEM file for self-signed TLS certs.', 'w4os' ),
+						),
+					),
+				),
+			),
+		),
 	);
 
 	foreach ( $settings_pages as $page_slug => $page ) {

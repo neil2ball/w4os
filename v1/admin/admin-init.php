@@ -7,6 +7,25 @@ define( 'W4OS_ADMIN', true );
 // error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
 function w4os_register_options_pages() {
+    // Add main settings page
+    add_options_page(
+        __('OpenSimulator Settings', 'w4os'),
+        __('OpenSimulator', 'w4os'),
+        'manage_options',
+        'w4os_settings',
+        'w4os_settings_page'
+    );
+    
+    // Add economy submenu
+    add_submenu_page(
+        'w4os_settings',
+        __('Economy Settings', 'w4os'),
+        __('Economy', 'w4os'),
+        'manage_options',
+        'w4os_economy',
+        'w4os_settings_page'
+    );
+
 	// Remove duplicate because we need to add the submenu both with core api an with metabox api
 	// remove_submenu_page( 'w4os', 'w4os_helpers' );
 
@@ -330,6 +349,25 @@ function w4os_process_actions( $args = array() ) {
 		exit;
 	}
 }
+
+function w4os_settings_page() {
+    $current_page = isset($_GET['page']) ? sanitize_text_field($_GET['page']) : 'w4os_settings';
+    ?>
+    <div class="wrap">
+        <h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+        <form action="options.php" method="post">
+            <?php
+            // Output nonce, option group, etc.
+            settings_fields( $current_page );
+            // Output all sections and fields registered for this page slug
+            do_settings_sections( $current_page );
+            submit_button();
+            ?>
+        </form>
+    </div>
+    <?php
+}
+
 add_action( 'admin_init', 'w4os_process_actions' );
 
 add_action(
@@ -414,11 +452,16 @@ add_action(
 					'recommended' => wp_lostpassword_url(),
 					'os_config'   => array( 'Robust.HG.ini' => array( '[GridInfoService]' => array( 'password = %s' ) ) ),
 				),
-				'economy'           => array(
+				'economy' => array(
 					'name'            => __( 'Economy', 'w4os' ),
 					'description'     => __( 'Currencies and some other services queried by the viewer. They are not accessed directly by the user.', 'w4os' ),
 					'external'        => true,
-					'os_config'       => array( 'Robust.HG.ini' => array( '[GridInfoService]' => array( 'economy = %s' ) ) ),
+					'settings_page_url' => admin_url( 'admin.php?page=w4os_economy' ),
+					'os_config'       => array(
+						'Robust.HG.ini' => array(
+							'[GridInfoService]' => array( 'economy = %s' )
+						)
+					),
 					'third_party_url' => ( get_option( 'w4os_provide_currency' ) ) ? '' : 'https://github.com/GuduleLapointe/flexible_helper_scripts',
 				),
 				'about'             => array(
