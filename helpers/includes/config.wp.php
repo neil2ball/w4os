@@ -87,8 +87,18 @@ define( 'CURRENCY_TRANSACTION_TBL', 'transactions' );
 /**
  * Money Server settings.
  */
-define( 'CURRENCY_USE_MONEYSERVER', true );
+$useMoneyServer = get_option( 'w4os_use_moneyserver', false );
+define( 'CURRENCY_USE_MONEYSERVER', (bool) $useMoneyServer );
 define( 'CURRENCY_SCRIPT_KEY', get_option( 'w4os_money_script_access_key', '123456789' ) );
+define( 'CURRENCY_MONEYSERVER_URL', get_option( 'w4os_moneyserver_url', 'http://localhost:8008/' ) );
+// Path to the MoneyServer certificate (for self‑signed TLS)
+
+$moneyserver_cainfo = get_option('w4os_moneyserver_cainfo', '');
+if (!empty($moneyserver_cainfo)) {
+    define('CURRENCY_MONEYSERVER_CAINFO', $moneyserver_cainfo);
+}
+
+
 $currency_rate = (float) get_option( 'w4os_currency_rate', 10 );
 define( 'CURRENCY_RATE', ( $currency_rate <= 0 ? 10 : $currency_rate ) ); // amount in dollar...
 $currency_per = (int) get_option( 'w4os_currency_rate_per', 1000 );
@@ -152,7 +162,6 @@ define( 'OFFLINE_MESSAGE_TBL', 'im_offline' ); // Same DB as Offline Module V2?
  */
 require_once 'databases.php';
 require_once 'functions.php';
-// require_once dirname(__DIR__) . '/engine/includes/functions.php';
 
 $currency_addon = dirname( __DIR__ ) . '/addons/' . CURRENCY_PROVIDER . '.php';
 if ( file_exists( $currency_addon ) ) {

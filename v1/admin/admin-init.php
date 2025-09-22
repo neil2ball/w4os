@@ -8,7 +8,7 @@ define( 'W4OS_ADMIN', true );
 
 function w4os_register_options_pages() {
     // Add main settings page
-    add_options_page(
+    /*add_options_page(
         __('OpenSimulator Settings', 'w4os'),
         __('OpenSimulator', 'w4os'),
         'manage_options',
@@ -24,7 +24,7 @@ function w4os_register_options_pages() {
         'manage_options',
         'w4os_economy',
         'w4os_settings_page'
-    );
+    );*/
 
 	// Remove duplicate because we need to add the submenu both with core api an with metabox api
 	// remove_submenu_page( 'w4os', 'w4os_helpers' );
