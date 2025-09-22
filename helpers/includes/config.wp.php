@@ -98,7 +98,6 @@ if (!empty($moneyserver_cainfo)) {
     define('CURRENCY_MONEYSERVER_CAINFO', $moneyserver_cainfo);
 }
 
-
 $currency_rate = (float) get_option( 'w4os_currency_rate', 10 );
 define( 'CURRENCY_RATE', ( $currency_rate <= 0 ? 10 : $currency_rate ) ); // amount in dollar...
 $currency_per = (int) get_option( 'w4os_currency_rate_per', 1000 );
@@ -107,6 +106,19 @@ define( 'CURRENCY_PROVIDER', get_option( 'w4os_currency_provider' ) );
 if ( ! defined( 'CURRENCY_HELPER_URL' ) ) {
 	define( 'CURRENCY_HELPER_URL', ( ! empty( W4OS_GRID_INFO['economy'] ) ) ? W4OS_GRID_INFO['economy'] : get_home_url( null, '/economy/' ) );
 }
+
+/**
+ * Currency Purchase Redirect Settings
+ * Added for external currency purchase integration
+ */
+define( 'CURRENCY_PURCHASE_URL', get_option( 'w4os_currency_purchase_url', 'https://eudaimon.me/microtokens/' ) );
+define( 'CURRENCY_PURCHASE_MESSAGE', get_option( 'w4os_currency_purchase_message', 'Please visit our website to purchase currency' ) );
+define( 'CURRENCY_REDIRECT_ENABLED', (bool) get_option( 'w4os_currency_redirect_enabled', true ) );
+
+// Optional: Different messages for different contexts
+define( 'CURRENCY_PURCHASE_REDIRECT_MESSAGE', get_option( 'w4os_currency_redirect_message', 'Currency purchase redirected to external website' ) );
+define( 'CURRENCY_DIRECT_PURCHASE_DISABLED', get_option( 'w4os_direct_purchase_disabled_message', 'Direct currency purchases are disabled. Please use our external website' ) );
+
 switch ( CURRENCY_PROVIDER ) {
 	case 'podex':
 		if ( ! empty( get_option( 'w4os_podex_error_message' ) ) ) {

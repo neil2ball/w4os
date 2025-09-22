@@ -221,6 +221,65 @@ class W4OS_Economy extends W4OS_Loader {
 					),
 				),
 
+				// External Currency Purchase Settings Group
+				array(
+					'name'       => __( 'External Currency Purchase', 'w4os' ),
+					'id'         => $prefix . 'currency_purchase_settings',
+					'type'       => 'group',
+					'visible'    => array(
+						'when'     => array( array( 'provide_economy', '=', 1 ) ),
+						'relation' => 'or',
+					),
+					'save_field' => false,
+					'fields'     => array(
+						array(
+							'name'       => __( 'Enable External Currency Purchase', 'w4os' ),
+							'id'         => $prefix . 'currency_redirect_enabled',
+							'type'       => 'switch',
+							'style'      => 'rounded',
+							'std'        => get_option( 'w4os_currency_redirect_enabled', false ),
+							'desc'       => __( 'Allow users to purchase currency via external website', 'w4os' ),
+						),
+						array(
+							'name'        => __( 'Currency Purchase URL', 'w4os' ),
+							'id'          => $prefix . 'currency_purchase_url',
+							'type'        => 'url',
+							'std'         => get_option( 'w4os_currency_purchase_url', '' ),
+							'placeholder' => 'https://your-store.com/currency-purchase',
+							'visible'     => array(
+								'when'     => array( array( 'currency_redirect_enabled', '=', 1 ) ),
+								'relation' => 'or',
+							),
+							'desc'       => __( 'URL where users will be redirected to purchase currency', 'w4os' ),
+						),
+						array(
+							'name'        => __( 'Purchase Link Label', 'w4os' ),
+							'id'          => $prefix . 'currency_purchase_label',
+							'type'        => 'text',
+							'std'         => get_option( 'w4os_currency_purchase_label', __( 'Buy Currency', 'w4os' ) ),
+							'placeholder' => __( 'Buy Currency', 'w4os' ),
+							'visible'     => array(
+								'when'     => array( array( 'currency_redirect_enabled', '=', 1 ) ),
+								'relation' => 'or',
+							),
+							'desc'       => __( 'Text displayed for the purchase link', 'w4os' ),
+						),
+						array(
+							'name'        => __( 'Purchase Description', 'w4os' ),
+							'id'          => $prefix . 'currency_purchase_description',
+							'type'        => 'textarea',
+							'std'         => get_option( 'w4os_currency_purchase_description', __( 'You will be redirected to our secure payment processor to complete your currency purchase.', 'w4os' ) ),
+							'placeholder' => __( 'You will be redirected to our secure payment processor to complete your currency purchase.', 'w4os' ),
+							'visible'     => array(
+								'when'     => array( array( 'currency_redirect_enabled', '=', 1 ) ),
+								'relation' => 'or',
+							),
+							'desc'       => __( 'Description shown to users when redirecting for currency purchase', 'w4os' ),
+							'rows'       => 3,
+						),
+					),
+				),
+
 				// Provider-specific configurations
 				array(
 					'name'       => __( 'Gloebit Configuration', 'w4os' ),
@@ -384,6 +443,8 @@ class W4OS_Economy extends W4OS_Loader {
 				__( 'Helper scripts allow communication between the money server and the grid: current balance update, currency cost estimation, land and object sales, payments...', 'w4os' ),
 				'<strong>' . __( 'New Feature: MoneyServer Proxy Mode', 'w4os' ) . '</strong>',
 				__( 'The plugin now supports XML-RPC proxy mode for DTL/NSL compatible money servers. This allows you to run the money server on a separate machine.', 'w4os' ),
+				'<strong>' . __( 'External Currency Purchase:', 'w4os' ) . '</strong>',
+				__( 'Enable redirecting users to external websites for currency purchases with customizable labels and descriptions.', 'w4os' ),
 				'<strong>' . __( 'Supported Currency Providers:', 'w4os' ) . '</strong>',
 				'<ul><li>' . join(
 					'</li><li>',
@@ -415,6 +476,7 @@ class W4OS_Economy extends W4OS_Loader {
 					'w4os_currency_provider'       => null,
 					'w4os_podex_options'           => array(),
 					'w4os_moneyserver_proxy'       => array(),
+					'w4os_currency_purchase_settings' => array(),
 				),
 				$_POST
 			);
@@ -430,6 +492,15 @@ class W4OS_Economy extends W4OS_Loader {
 					update_option( 'w4os_moneyserver_url', sanitize_text_field( $proxy_settings['w4os_moneyserver_url'] ) );
 					update_option( 'w4os_money_script_access_key', sanitize_text_field( $proxy_settings['w4os_money_script_access_key'] ) );
 					update_option( 'w4os_moneyserver_cainfo', sanitize_text_field( $proxy_settings['w4os_moneyserver_cainfo'] ) );
+				}
+
+				// Save currency purchase settings
+				if ( isset( $_POST['w4os_currency_purchase_settings'] ) ) {
+					$purchase_settings = $_POST['w4os_currency_purchase_settings'];
+					update_option( 'w4os_currency_redirect_enabled', isset( $purchase_settings['w4os_currency_redirect_enabled'] ) );
+					update_option( 'w4os_currency_purchase_url', esc_url_raw( $purchase_settings['w4os_currency_purchase_url'] ) );
+					update_option( 'w4os_currency_purchase_label', sanitize_text_field( $purchase_settings['w4os_currency_purchase_label'] ) );
+					update_option( 'w4os_currency_purchase_description', sanitize_textarea_field( $purchase_settings['w4os_currency_purchase_description'] ) );
 				}
 
 				// Save currency rates

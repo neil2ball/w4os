@@ -33,6 +33,18 @@ $xmlrpc_server = xmlrpc_server_create();
 //
 xmlrpc_server_register_method( $xmlrpc_server, 'getCurrencyQuote', 'currency_xmlrpc_quote' );
 function currency_xmlrpc_quote( $method_name, $params, $app_data ) {
+    if (CURRENCY_REDIRECT_ENABLED) {
+        $response_xml = xmlrpc_encode(array(
+            'success' => false,
+            'errorMessage' => CURRENCY_DIRECT_PURCHASE_DISABLED,
+            'errorURI' => CURRENCY_PURCHASE_URL
+        ));
+
+        header('Content-type: text/xml');
+        echo $response_xml;
+        return '';
+    }
+    
 	$req       = $params[0];
 	$agentid   = $req['agentId'];
 	$sessionid = $req['secureSessionId'];
@@ -97,6 +109,18 @@ function currency_xmlrpc_quote( $method_name, $params, $app_data ) {
 //
 xmlrpc_server_register_method( $xmlrpc_server, 'buyCurrency', 'currency_xmlrpc_buy' );
 function currency_xmlrpc_buy( $method_name, $params, $app_data ) {
+    if (CURRENCY_REDIRECT_ENABLED) {
+        $response_xml = xmlrpc_encode(array(
+            'success' => false,
+            'errorMessage' => CURRENCY_PURCHASE_MESSAGE . ': ' . CURRENCY_PURCHASE_URL,
+            'errorURI' => CURRENCY_PURCHASE_URL
+        ));
+
+        header('Content-type: text/xml');
+        echo $response_xml;
+        return '';
+    }
+    
 	$req       = $params[0];
 	$agentid   = $req['agentId'];
 	$sessionid = $req['secureSessionId'];

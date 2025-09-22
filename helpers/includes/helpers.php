@@ -47,6 +47,11 @@ if (!isset($HTTP_RAW_POST_DATA)) $HTTP_RAW_POST_DATA = file_get_contents('php://
 
 function  process_transaction($avatarID, $cost, $ipAddress)
 {
+    if (CURRENCY_REDIRECT_ENABLED) {
+        error_log("Currency purchase attempt blocked for $avatarID - redirect enabled");
+        return false;
+    }
+    
 	# Do Credit Card Processing here!  Return False if it fails!
 	# Remember, $amount is stored without decimal places, however it's assumed
 	# that the transaction amount is in Cents and has two decimal places
@@ -200,6 +205,14 @@ function  update_simulator_balance($agentID, $amount=-1, $secureID=null)
 //
 function  add_money($agentID, $amount, $secureID=null) 
 {
+    if (CURRENCY_REDIRECT_ENABLED) {
+        return array(
+            'success' => false, 
+            'message' => CURRENCY_DIRECT_PURCHASE_DISABLED,
+            'url' => CURRENCY_PURCHASE_URL
+        );
+    }
+    
     if (use_moneyserver_proxy()) {
         return currency_add_money($agentID, $amount, $secureID);
     }

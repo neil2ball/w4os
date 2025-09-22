@@ -456,13 +456,16 @@ add_action(
 					'name'            => __( 'Economy', 'w4os' ),
 					'description'     => __( 'Currencies and some other services queried by the viewer. They are not accessed directly by the user.', 'w4os' ),
 					'external'        => true,
-					'settings_page_url' => admin_url( 'admin.php?page=w4os_economy' ),
+					'settings_page_url' => admin_url( 'admin.php?page=w4os-economy' ),
 					'os_config'       => array(
 						'Robust.HG.ini' => array(
 							'[GridInfoService]' => array( 'economy = %s' )
 						)
 					),
 					'third_party_url' => ( get_option( 'w4os_provide_currency' ) ) ? '' : 'https://github.com/GuduleLapointe/flexible_helper_scripts',
+					'currency_purchase_enabled' => get_option( 'w4os_currency_redirect_enabled', false ),
+					'currency_purchase_url' => get_option( 'w4os_currency_purchase_url', '' ),
+					'currency_purchase_label' => get_option( 'w4os_currency_purchase_label', __( 'Buy Currency', 'w4os' ) ),
 				),
 				'about'             => array(
 					'name'        => __( 'About this grid', 'w4os' ),
