@@ -20,7 +20,7 @@
 
 // error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
-require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/includes/config.wp.php';
 require_once __DIR__ . '/includes/economy.php';
 
 //
